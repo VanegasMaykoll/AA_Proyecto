@@ -1,0 +1,73 @@
+====================================================================================================
+ REPORTE CONSOLIDADO: EVALUACIÓN DE ESTRUCTURAS AUMENTADAS PARA REPORTES RAP ESPOL
+ Fecha: 2026-09-11 23:55:07 | CPU: x86_64
+ Parámetros Base: N = 1,000 informes, M = 4 métricas (g, z, v, p)
+====================================================================================================
+
+----------------------------------------------------------------------------------------------------
+[FASE 1: INGESTA E INDEXACIÓN EN MEMORIA]
+Descripción: Inserción de reportes en la estructura de almacenamiento e índices secundarios.
+----------------------------------------------------------------------------------------------------
+Estructura                          Operación            Tiempo Total       Latencia/Informe  
+----------------------------------------------------------------------------------------------------
+Fuerza Bruta (Baseline)             std::vector               0.304 ms        0.304 µs
+Propuesta (4 AVL Aumentados)        Árboles AVL               0.341 ms        0.341 µs
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+[FASE 2: CONSULTAS ESTADÍSTICAS POR INTERVALO - ALGORITMO 4: AgregadoLE]
+Descripción: Cálculo de media, varianza y desviación estándar sobre intervalos en Theta(log Dm).
+----------------------------------------------------------------------------------------------------
+Consulta de Intervalo                    k Items    AVL Aumentado    Fuerza Bruta     Speedup     
+----------------------------------------------------------------------------------------------------
+Puntaje Global [3.50, 3.80] (~35% datos)      335       0.0309 µs         1.10 µs       35.5x
+Puntaje Global [3.00, 4.20] (~90% datos)      935       0.0169 µs         0.94 µs       55.7x
+Puntaje Global [1.50, 4.50] (~99% datos)      995       0.0177 µs         0.94 µs       53.3x
+Mirada Audiencia [0.60, 0.85] (~55% datos)      565       0.0230 µs         1.13 µs       49.1x
+Volumen de Voz [0.65, 0.90] (~60% datos)      618       0.0176 µs         0.79 µs       44.7x
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+[FASE 3: BÚSQUEDA POR RANGO (RECUPERACIÓN DE IDS) - ALGORITMO 3]
+Descripción: Búsqueda ordenada con poda en el árbol AVL vs. escaneo secuencial.
+----------------------------------------------------------------------------------------------------
+Consulta de Rango                        k Items    AVL Podado       Fuerza Bruta     Speedup     
+----------------------------------------------------------------------------------------------------
+Rango Estrecho [3.40, 3.60] (~19% datos)      195        2.013 µs        2.572 µs        1.3x
+Rango Medio    [3.00, 4.00] (~78% datos)      793        6.914 µs        5.969 µs        0.9x
+Rango Amplio   [2.00, 4.50] (~99% datos)      995        9.343 µs        4.893 µs        0.5x
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+[FASE 4: CONSULTAS COMPUESTAS MULTIVARIADAS - ALGORITMO 5]
+Descripción: Intersección conjuntiva de 4 predicados ordenados por cardinalidad.
+----------------------------------------------------------------------------------------------------
+Informes coincidentes: 238
+  - Propuesta (Ordenado por cardinalidad creciente): 123.61 µs
+  - Intersección sin ordenamiento previo:           138.79 µs
+  - Fuerza Bruta Secuencial:                         4.88 µs
+  - Ganancia por ordenación de cardinalidades:       1.12x
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+[FASE 5: SELECCIÓN TOP-K DE EXPOSITORES - ALGORITMO 7]
+Descripción: Recorrido in-order inverso podado en el AVL vs. ordenamiento parcial O(N log k).
+----------------------------------------------------------------------------------------------------
+Operación                      Cantidad k   AVL Top-k          Fuerza Bruta       Speedup     
+----------------------------------------------------------------------------------------------------
+Mejores Expositores                    10          0.120 µs          6.052 µs       50.4x
+Mejores Expositores                    50          0.353 µs         11.917 µs       33.7x
+Mejores Expositores                   100          0.591 µs         18.415 µs       31.2x
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+[FASE 6: MATERIALIZACIÓN EN ALMACENAMIENTO PRIMARIO (MULTIGET EN LEVELDB) - ALGORITMO 6]
+Descripción: Recuperación de 200 informes validados (RQ). Evaluación de filtros AMQ.
+----------------------------------------------------------------------------------------------------
+Variante        Filtro                    MultiGet Hits      MultiGet Misses    Tamaño Disco   
+----------------------------------------------------------------------------------------------------
+nofilter        Sin Filtro (Baseline)          2.280 µs/op        0.057 µs/op          303 KB
+bloom           Bloom (10 bpk)                 2.255 µs/op        0.050 µs/op          305 KB
+ribbon          Ribbon (10 bpk equiv)          4.860 µs/op        0.117 µs/op          307 KB
+----------------------------------------------------------------------------------------------------
+====================================================================================================

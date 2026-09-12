@@ -1,0 +1,112 @@
+{
+  "total_reports": 50000,
+  "ingestion": {
+    "brute_force_ms": 15.5849,
+    "augmented_avl_ms": 11.3514
+  },
+  "statistical_queries": [
+    {
+      "label": "Puntaje Global [3.50, 3.80] (~35% datos)",
+      "matched_count": 17896,
+      "avl_us": 0.02726,
+      "brute_force_us": 253.542,
+      "speedup": 9300.89
+    },
+    {
+      "label": "Puntaje Global [3.00, 4.20] (~90% datos)",
+      "matched_count": 45880,
+      "avl_us": 0.03066,
+      "brute_force_us": 96.9832,
+      "speedup": 3163.18
+    },
+    {
+      "label": "Puntaje Global [1.50, 4.50] (~99% datos)",
+      "matched_count": 49662,
+      "avl_us": 0.01962,
+      "brute_force_us": 84.0035,
+      "speedup": 4281.52
+    },
+    {
+      "label": "Mirada Audiencia [0.60, 0.85] (~55% datos)",
+      "matched_count": 28074,
+      "avl_us": 0.0391,
+      "brute_force_us": 220.125,
+      "speedup": 5629.8
+    },
+    {
+      "label": "Volumen de Voz [0.65, 0.90] (~60% datos)",
+      "matched_count": 31590,
+      "avl_us": 0.0334,
+      "brute_force_us": 182.149,
+      "speedup": 5453.57
+    }
+  ],
+  "range_queries": [
+    {
+      "label": "Rango Estrecho [3.40, 3.60] (~19% datos)",
+      "matched_count": 9447,
+      "avl_us": 63.7903,
+      "brute_force_us": 254.693,
+      "speedup": 3.99267
+    },
+    {
+      "label": "Rango Medio    [3.00, 4.00] (~78% datos)",
+      "matched_count": 38859,
+      "avl_us": 234.744,
+      "brute_force_us": 417.861,
+      "speedup": 1.78007
+    },
+    {
+      "label": "Rango Amplio   [2.00, 4.50] (~99% datos)",
+      "matched_count": 49662,
+      "avl_us": 304.508,
+      "brute_force_us": 375.86,
+      "speedup": 1.23432
+    }
+  ],
+  "compound_query": {
+    "matched_count": 12547,
+    "sorted_cardinality_us": 9238.03,
+    "unsorted_us": 9492.22,
+    "brute_force_us": 530.165,
+    "gain_sorting": 1.02752
+  },
+  "top_k": [
+    {
+      "k": 10,
+      "avl_us": 0.16654,
+      "brute_force_us": 313.771,
+      "speedup": 1884.06
+    },
+    {
+      "k": 50,
+      "avl_us": 0.36104,
+      "brute_force_us": 333.291,
+      "speedup": 923.141
+    },
+    {
+      "k": 100,
+      "avl_us": 0.62302,
+      "brute_force_us": 355.139,
+      "speedup": 570.028
+    }
+  ],
+  "multiget_recovery": {
+    "target_items": 10801,
+    "hit_latency_per_item_us": {
+      "bloom": 2.2922,
+      "nofilter": 2.28173,
+      "ribbon": 2.32395
+    },
+    "miss_latency_per_item_us": {
+      "bloom": 0.051,
+      "nofilter": 0.051,
+      "ribbon": 0.049
+    },
+    "disk_sizes_kb": {
+      "bloom": 15266,
+      "nofilter": 15159,
+      "ribbon": 15347
+    }
+  }
+}

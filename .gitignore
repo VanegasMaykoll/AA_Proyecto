@@ -1,0 +1,30 @@
+# Binarios y compilados C++
+build/
+bin/
+*.o
+*.a
+*.so
+test_correctness
+rap_bench
+
+# Datos generados en ejecución y bases de datos temporales
+*.jsonl
+/tmp/
+*.ldb
+*.log
+*.sst
+MANIFEST-*
+CURRENT
+LOCK
+LOG*
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Editores y SO
+.vscode/
+.idea/
+.DS_Store
+*.swp
